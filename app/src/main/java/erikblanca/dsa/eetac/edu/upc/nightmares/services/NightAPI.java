@@ -16,6 +16,9 @@ public interface NightAPI {
     @POST("authentication/LogIn")
     Call<LogSignTemplate> authorize(@Body LogSignTemplate credentials);
 
+    @POST("authentication/SignUp")
+    Call<LogSignTemplate> register(@Body LogSignTemplate credentials);
+
     @GET("users/byScore")
     Call<List<ScoreTemplate>> getScoreList();
 

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import erikblanca.dsa.eetac.edu.upc.nightmares.utils.CredentialsDialog;
 import erikblanca.dsa.eetac.edu.upc.nightmares.services.NightAPI;
@@ -27,13 +28,19 @@ public class MainActivity extends AppCompatActivity implements CredentialsDialog
     private NightAPI nightAPI;
     private Button logButton;
     private Button signButton;
+    private int operation = 0;
+
+    //Devuelve el contexto, lo utilizamos desde los Callbacks
+    public Context getContext() {
+        return (Context)this;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         logButton = (Button) findViewById(R.id.buttonLogIn);
-
+        signButton = (Button) findViewById(R.id.buttonSignUp);
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(BaseURL)
 
@@ -45,29 +52,35 @@ public class MainActivity extends AppCompatActivity implements CredentialsDialog
         logButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                operation = 1;
+                DialogFragment df = new CredentialsDialog();
+                df.show(getSupportFragmentManager(), "dialog");
+            }
+        });
+
+        signButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                operation = 2;
                 DialogFragment df = new CredentialsDialog();
                 df.show(getSupportFragmentManager(), "dialog");
             }
         });
     }
 
-
-    //Devuelve el contexto, lo utilizamos desde los Callbacks
-    public Context getContext() {
-        return (Context)this;
-    }
     //EVENTO del button de Credentials Dialog para enviar el check del login
     @Override
     public void OnPositiveButtonClicked(String name, String password) {
+
+        Toast.makeText(this, "Your download has resumed.", Toast.LENGTH_LONG).show();
         LogSignTemplate credentials = new LogSignTemplate(name, password);
-        logIn(credentials);
-
-
-        //Track newTrack = new Track(id, singer, title);
-        //createNewTrack(newTrack);
+        switch (operation){
+            case 0: break;
+            case 1: logIn(credentials); break;
+            case 2: signUp(credentials); break;
+            default: break;
+        }
     }
-
-
 
 
     // CALL para hacer un POST de login con las credenciales del usuario
@@ -94,5 +107,26 @@ public class MainActivity extends AppCompatActivity implements CredentialsDialog
         });
     }
 
+    // CALL para hacer un POST de registro con las credenciales del usuario
+    private void signUp(LogSignTemplate credentials){
+        Call<LogSignTemplate> callNewTrack = nightAPI.register(credentials);
+        callNewTrack.enqueue(new Callback<LogSignTemplate>() {
+            @Override
+            public void onResponse(Call<LogSignTemplate> call, Response<LogSignTemplate> response) {
+                if(response.isSuccessful()){
+                    Log.d("QuestionsCallback", "////////////////////////////////////   SUCCESFUL SIGN UP !!!!!!!!!!!!!!!  /////////////////////////////////////");
+                    Intent intent = new Intent(getContext(), MenuActivity.class);
+                    startActivity(intent);
+                }
+                else
+                    Log.d("QuestionsCallback", "////////////////////////////////////   NO SUCCESFUL RESPONSE   /////////////////////////////////////");
+            }
 
+            @Override
+            public void onFailure(Call<LogSignTemplate> call, Throwable t) {
+                Log.d("QuestionsCallback", "////////////////////////////////////////   ERROR SIGNING   /////////////////////////////////");
+                t.printStackTrace();
+            }
+        });
+    }
 }
