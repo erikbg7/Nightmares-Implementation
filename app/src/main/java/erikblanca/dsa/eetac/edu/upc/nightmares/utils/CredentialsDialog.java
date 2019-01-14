@@ -31,7 +31,6 @@ public class CredentialsDialog extends DialogFragment {
     public void onAttach(Context context){
         super.onAttach(context);
         onDialogListener = (OnDialogListener) getActivity();
-
     }
 
     @NonNull
@@ -46,7 +45,6 @@ public class CredentialsDialog extends DialogFragment {
         final EditText name = view.findViewById(R.id.Name);
         final EditText password = view.findViewById(R.id.Password);
 
-
         builder.setTitle("Credentials")
                 .setMessage("Fill the fields and click confirm.")
                 .setView(view)
@@ -58,9 +56,7 @@ public class CredentialsDialog extends DialogFragment {
                     }
                 })
                 .setNegativeButton("Cancel", null);
-
         return builder.create();
-
     }
 }
 

@@ -15,6 +15,7 @@ import erikblanca.dsa.eetac.edu.upc.nightmares.utils.CredentialsDialog;
 import erikblanca.dsa.eetac.edu.upc.nightmares.services.NightAPI;
 import erikblanca.dsa.eetac.edu.upc.nightmares.R;
 import erikblanca.dsa.eetac.edu.upc.nightmares.models.LogSignTemplate;
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements CredentialsDialog
     @Override
     public void OnPositiveButtonClicked(String name, String password) {
 
-        Toast.makeText(this, "Your download has resumed.", Toast.LENGTH_LONG).show();
         LogSignTemplate credentials = new LogSignTemplate(name, password);
         switch (operation){
             case 0: break;
@@ -92,16 +92,20 @@ public class MainActivity extends AppCompatActivity implements CredentialsDialog
             public void onResponse(Call<LogSignTemplate> call, Response<LogSignTemplate> response) {
                 if(response.isSuccessful()){
                     Log.d("QuestionsCallback", "////////////////////////////////////   SUCCESFUL LOGIN !!!!!!!!!!!!!!!  /////////////////////////////////////");
+                    Toasty.success(getContext(), "Succes, welcome.", Toast.LENGTH_SHORT, true).show();
                     Intent intent = new Intent(getContext(), MenuActivity.class);
                     startActivity(intent);
                 }
-                else
+                else{
                     Log.d("QuestionsCallback", "////////////////////////////////////   NO SUCCESFUL RESPONSE   /////////////////////////////////////");
+                    Toasty.error(getContext(), "Incorrect username or password.", Toast.LENGTH_SHORT, true).show();
+                }
             }
 
             @Override
             public void onFailure(Call<LogSignTemplate> call, Throwable t) {
                 Log.d("QuestionsCallback", "////////////////////////////////////////   ERROR   /////////////////////////////////");
+                Toasty.error(getContext(), "Error while validating..", Toast.LENGTH_SHORT, true).show();
                 t.printStackTrace();
             }
         });
@@ -115,16 +119,20 @@ public class MainActivity extends AppCompatActivity implements CredentialsDialog
             public void onResponse(Call<LogSignTemplate> call, Response<LogSignTemplate> response) {
                 if(response.isSuccessful()){
                     Log.d("QuestionsCallback", "////////////////////////////////////   SUCCESFUL SIGN UP !!!!!!!!!!!!!!!  /////////////////////////////////////");
+                    Toasty.success(getContext(), "Succes, welcome.", Toast.LENGTH_SHORT, true).show();
                     Intent intent = new Intent(getContext(), MenuActivity.class);
                     startActivity(intent);
                 }
-                else
+                else{
                     Log.d("QuestionsCallback", "////////////////////////////////////   NO SUCCESFUL RESPONSE   /////////////////////////////////////");
+                    Toasty.error(getContext(), "Name already in use.", Toast.LENGTH_SHORT, true).show();
+                }
             }
 
             @Override
             public void onFailure(Call<LogSignTemplate> call, Throwable t) {
                 Log.d("QuestionsCallback", "////////////////////////////////////////   ERROR SIGNING   /////////////////////////////////");
+                Toasty.error(getContext(), "Error while validating.", Toast.LENGTH_SHORT, true).show();
                 t.printStackTrace();
             }
         });
