@@ -1,4 +1,4 @@
-package erikblanca.dsa.eetac.edu.upc.nightmares;
+package erikblanca.dsa.eetac.edu.upc.nightmares.utils;
 
 /**
  * Created by erikb on 1/13/2019.
@@ -6,8 +6,6 @@ package erikblanca.dsa.eetac.edu.upc.nightmares;
 
 import java.util.List;
 
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +15,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import erikblanca.dsa.eetac.edu.upc.nightmares.R;
+import erikblanca.dsa.eetac.edu.upc.nightmares.models.ScoreTemplate;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    private List<Track> values;
+    private List<ScoreTemplate> values;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -36,16 +37,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             layout = v;
             txtHeader = (TextView) v.findViewById(R.id.firstLine);
             txtFooter = (TextView) v.findViewById(R.id.secondLine);
-            newTrack = (ImageView) v.findViewById(R.id.imageView1);
-            buttonNewTrack = (Button) v.findViewById(R.id.button);
-
-
+            newTrack = (ImageView) v.findViewById(R.id.icon);
         }
     }
 
 
-    public void add(int position, Track tr) {
-        values.add(position, tr);
+    public void add(int position, ScoreTemplate score) {
+        values.add(position, score);
         notifyItemInserted(position);
     }
 
@@ -55,7 +53,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(List<Track> myDataset) {
+    public MyAdapter(List<ScoreTemplate> myDataset) {
         values = myDataset;
     }
 
@@ -67,7 +65,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         LayoutInflater inflater = LayoutInflater.from(
                 parent.getContext());
         View v =
-                inflater.inflate(R.layout.track_layout, parent, false);
+                inflater.inflate(R.layout.info_layout, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -78,12 +76,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        final String singer = values.get(position).getSinger();
-        final String title = values.get(position).getTitle();
+        final String name = values.get(position).getName();
+        final int score = values.get(position).getScore();
 
-        System.out.println(singer);
-        holder.txtHeader.setText("Title:  " + title);
-        holder.txtFooter.setText("Singer: " + singer);
+        //System.out.println(singer);
+        holder.txtHeader.setText("Player:  " + name);
+        holder.txtFooter.setText("Total Score: " + score + " points");
 
         holder.txtHeader.setOnClickListener(new OnClickListener() {
             @Override

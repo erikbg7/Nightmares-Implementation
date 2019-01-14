@@ -1,4 +1,4 @@
-package erikblanca.dsa.eetac.edu.upc.nightmares;
+package erikblanca.dsa.eetac.edu.upc.nightmares.models;
 
 /**
  * Created by erikb on 1/13/2019.
